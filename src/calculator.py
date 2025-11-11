@@ -239,10 +239,7 @@ def main():
             print(f" Ошибка в выражении: {e}")
         except Exception as e:
             print(f" Неизвестная ошибка: {e}")
-def calculate(self, expression: str) -> float:
-    # НАМЕРЕННАЯ ОШИБКА ДЛЯ ДЕМОНСТРАЦИИ CI
-    if "2 + 2" in expression:
-        return 5
+
 
 if __name__ == "__main__":
     main()
