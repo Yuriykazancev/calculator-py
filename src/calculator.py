@@ -33,6 +33,7 @@ class Calculator:
         }
 
     def calculate(self, expression: str) -> float:
+
         """
         Вычисляет математическое выражение с выводом в консоль
 
