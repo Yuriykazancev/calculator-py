@@ -33,7 +33,6 @@ class Calculator:
         }
 
     def calculate(self, expression: str) -> float:
-
         """
         Вычисляет математическое выражение с выводом в консоль
 
@@ -50,17 +49,17 @@ class Calculator:
         if not expression or expression.strip() == "":
             raise ValueError("Expression cannot be empty")
 
-        print(f"\n Вычисление выражения: {expression}")
-
+        print(f"\n🧮 Вычисление выражения: {expression}")
+        print("=" * 50)
 
         # Преобразуем в ОПН
         rpn = self.to_reverse_polish_notation(expression)
-        print(f" Обратная польская запись: {' '.join(rpn)}")
+        print(f"📋 Обратная польская запись: {' '.join(rpn)}")
 
         # Вычисляем результат
         result = self.evaluate_rpn(rpn)
-        print(f" Результат: {result}")
-
+        print(f"✅ Результат: {result}")
+        print("=" * 50)
 
         return result
 
@@ -89,8 +88,11 @@ class Calculator:
                     token = 'u'
 
                 # Выталкиваем операторы с более высоким или равным приоритетом
+                # Для право-ассоциативных операторов (^) используем строгое неравенство
                 while (stack and self._is_operator(stack[-1]) and
-                       self._get_precedence(token) <= self._get_precedence(stack[-1])):
+                       ((self._get_precedence(token) < self._get_precedence(stack[-1])) or
+                        (self._get_precedence(token) == self._get_precedence(stack[-1]) and
+                         self._is_left_associative(token)))):
                     output.append(stack.pop())
 
                 stack.append(token)
@@ -207,6 +209,12 @@ class Calculator:
         """Возвращает приоритет оператора"""
         return self.precedence.get(operator, 0)
 
+    def _is_left_associative(self, operator: str) -> bool:
+        """Проверяет, является ли оператор лево-ассоциативным"""
+        # Возведение в степень - право-ассоциативно
+        # Остальные операторы - лево-ассоциативные
+        return operator != '^'
+
 
 def main():
     """
@@ -214,32 +222,36 @@ def main():
     """
     calc = Calculator()
 
+    print("🧮 КАЛЬКУЛЯТОР С ОБРАТНОЙ ПОЛЬСКОЙ ЗАПИСЬЮ")
+    print("=" * 60)
+    print("Поддерживаемые операции: +, -, *, /, %, ^ (степень), унарный минус")
     print("Примеры: 2 + 3 * 4, (1 + 2) * 3, -5 + 8, 2 ^ 3")
     print("Для выхода введите 'quit', 'exit' или нажмите Ctrl+C")
+    print("=" * 60)
 
     while True:
         try:
             user_input = input("\nВведите выражение: ").strip()
 
             if user_input.lower() in ['quit', 'exit', 'q']:
-                print("\n Выход!")
+                print("\n👋 До свидания!")
                 break
 
             if not user_input:
-                print("⚠  Пустой ввод. Попробуйте снова.")
+                print("⚠️  Пустой ввод. Попробуйте снова.")
                 continue
 
             result = calc.calculate(user_input)
 
         except KeyboardInterrupt:
-            print("\n\n Выход!")
+            print("\n\n👋 До свидания!")
             break
         except ZeroDivisionError as e:
-            print(f" Ошибка: {e}")
+            print(f"❌ Ошибка: {e}")
         except ValueError as e:
-            print(f" Ошибка в выражении: {e}")
+            print(f"❌ Ошибка в выражении: {e}")
         except Exception as e:
-            print(f" Неизвестная ошибка: {e}")
+            print(f"❌ Неизвестная ошибка: {e}")
 
 
 if __name__ == "__main__":
